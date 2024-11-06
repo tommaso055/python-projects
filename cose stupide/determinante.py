@@ -1,3 +1,4 @@
+import random as r
 
 def all_sigmas(elements: list[int]) -> list[list[int]]:
 	if (len(elements) < 2): return [elements]
@@ -24,16 +25,16 @@ def find_sign(sigmas: list[list[int]]) -> list[int]:
 			signs.append(1)
 	return signs
 
-def s_copy(sigmas: list[list[int]]) -> list[list[int]]:
-	copy: list[list[int]] = []
+def matrix_copy(sigmas: list[list[float]]) -> list[list[float]]:
+	copy: list[list[float]] = []
 	for i in range(len(sigmas)):
 		copy.append(sigmas[i].copy())
 	return copy
 
 def calculate_determinant(matrix: list[list[float]]) -> float:
 	dimension: int = len(matrix)
-	sigmas: list[list[int]] = all_sigmas([i for i in range(dimension)])
-	signs: list[int] = find_sign(s_copy(sigmas))
+	sigmas: list[list[float]] = all_sigmas([i for i in range(dimension)])
+	signs: list[int] = find_sign(matrix_copy(sigmas))
 	total_result: float = 0
 	for i in range(len(sigmas)):
 		curr: float = 1
@@ -42,17 +43,22 @@ def calculate_determinant(matrix: list[list[float]]) -> float:
 		total_result += curr * signs[i]
 	return total_result
 
-matrix1 = [
-[5, 7, 2],
-[4, -2, 5],
-[2, -1, -6]
-]
+def generate_matrix(n: int) -> list[list[float]]:
+	matrix: list[list[float]] = []
+	for i in range(n):
+		matrix.append([r.randint(-100, 100) for _ in range(n)])
+	return matrix
 
-matrix2 = [
-[5, 7, 2, 3],
-[4, -2, 5, 8],
-[2, -1, -6, 4],
-[6, 6, 12, 9],
-]
+def display_matrix(matrix: list[list[float]]) -> None:
+	copied = matrix_copy(matrix)
+	for line in copied:
+		print(" ".join(map(str, line)))
 
-print(calculate_determinant(matrix2))
+
+n = int(input("What size should the matrix be? "))
+matrix: list[list[float]] = generate_matrix(n)
+print(f"You generated the following matrix {n}x{n}:")
+display_matrix(matrix)
+det: float = calculate_determinant(matrix)
+print(f"The determinant is: {det}")
+print("Approximation: %.3g" %det)
